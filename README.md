@@ -15,7 +15,7 @@ For shared accounts and syncing, follow the [Supabase setup](supabase/README.md)
 
 ## The GitHub repository that contains our code
 
-[melonymelons/apartmentcoordinator](https://github.com/melonymelons/apartmentcoordinator) contains the application, styles, tests, and Supabase integration.
+[melonymelons/public_cis4120_apartmentcoordinator](https://github.com/melonymelons/public_cis4120_apartmentcoordinator) contains the application, styles, tests, and Supabase integration.
 
 ### Attributions
 
