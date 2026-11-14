@@ -1,0 +1,80 @@
+import { test, expect } from './fixtures';
+import { initialState } from '../src/model';
+
+for (const width of [320, 440, 1280]) test(`inventory groups items and supports filtering, counts and item details at ${width}px`, async ({ page }) => {
+  const state = initialState();
+  state.inventory = state.inventory.map(item => ({ ...item, quantity: item.id === 'stock-bags' ? 1 : 8, unit: item.id === 'stock-paper' ? 'rolls' : 'bottles', status: item.id === 'stock-bags' ? 'low' : 'in' }));
+  await page.setViewportSize({ width, height: 956 });
+  await page.addInitScript(value => { if (!localStorage.getItem('roomie-v1')) localStorage.setItem('roomie-v1', JSON.stringify(value)); }, state);
+  await page.goto('/');
+  await page.locator(width > 640 ? '.desktop-nav' : '.mobile-nav').getByRole('button', { name: 'Inventory', exact: true }).click();
+  const inventory = page.locator('.inventory-page');
+  await expect(inventory.getByRole('button', { name: /Add task|Restock|View task/ })).toHaveCount(0);
+  await expect(inventory.getByRole('region', { name: 'Kitchen items' })).toHaveCount(1);
+  await expect(inventory.getByRole('region', { name: 'Bathroom items' })).toHaveCount(1);
+  await expect(inventory.locator('.inventory-room-group').first().getByRole('article')).toHaveCount(2);
+  await expect(inventory.locator('select')).toHaveCount(0);
+  await inventory.getByRole('button', { name: 'Low stock' }).click();
+  await expect(inventory.getByRole('article')).toHaveCount(1);
+  await inventory.getByLabel('Filter inventory by room').click();
+  await inventory.getByRole('option', { name: 'Bathroom', exact: true }).click();
+  await expect(inventory.getByRole('heading', { name: 'No matching items' })).toBeVisible();
+  await inventory.getByRole('button', { name: 'Show all items' }).click();
+  await inventory.getByLabel('Search supplies').fill('paper');
+  await expect(inventory.getByRole('article')).toHaveCount(1);
+  await inventory.getByRole('button', { name: 'Clear inventory search' }).click();
+  const soap = inventory.getByRole('article', { name: 'Dish soap', exact: true });
+  await soap.getByRole('button', { name: 'Add one Dish soap' }).click();
+  await expect(soap.getByRole('status')).toHaveText('9 bottles');
+  await soap.getByRole('button', { name: 'View Dish soap' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByRole('heading', { name: 'Dish soap', exact: true })).toBeVisible();
+  await expect(dialog.locator('output')).toHaveText('9 bottles');
+  await expect(dialog.getByRole('button', { name: 'Restock task', exact: true })).toHaveCount(0);
+  await dialog.getByRole('button', { name: 'Close dialog' }).click();
+  await expect(inventory.locator('.stock-low .inventory-item-icon')).toHaveCSS('animation-name', 'none');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: `test-results/inventory-ui-${width}.png`, fullPage: true });
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('roomie-v1')));
+  expect(saved.inventory.find(item => item.id === 'stock-soap').quantity).toBe(9);
+  expect(saved.tasks).toEqual(state.tasks);
+});
+
+
+test('empty inventory has one clear Add item action', async ({ page }) => {
+  const state = initialState(); state.inventory = [];
+  await page.addInitScript(value => localStorage.setItem('roomie-v1', JSON.stringify(value)), state);
+  await page.goto('/');
+  await page.locator('.mobile-nav').getByRole('button', { name: 'Inventory', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'No items yet' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Add item', exact: true })).toHaveCount(1);
+  await page.getByRole('button', { name: 'Add item', exact: true }).click();
+  await expect(page.getByRole('dialog').getByRole('heading', { name: 'Add item', exact: true })).toBeVisible();
+});
+
+test('inventory shares Profile panel styling and room contents collapse smoothly', async ({ page }) => {
+  await page.goto('/');
+  const nav = page.locator('.mobile-nav');
+  await nav.getByRole('button', { name: 'Inventory', exact: true }).click();
+  await expect(page.getByRole('button', { name: /Your items/ })).toHaveCount(0);
+  await expect(page.locator('.inventory-global-tools')).toBeVisible();
+  const kitchen = page.getByRole('region', { name: 'Kitchen items', exact: true });
+  const header = kitchen.locator('.profile-section-toggle');
+  const headerBefore = await header.boundingBox();
+  const skin = await kitchen.evaluate(el => ({ background: getComputedStyle(el).backgroundColor, border: getComputedStyle(el).borderColor, header: getComputedStyle(el.querySelector('.profile-section-toggle')).backgroundColor }));
+  await header.click();
+  await expect(header).toHaveAttribute('aria-expanded', 'false');
+  await expect(kitchen.locator('.profile-section-panel')).toBeHidden();
+  expect((await header.boundingBox()).height).toBeCloseTo(headerBefore.height, 1);
+  await header.click();
+  await expect(kitchen.getByRole('article', { name: 'Trash bags', exact: true })).toBeVisible();
+  await kitchen.locator('.profile-section-panel').evaluate(async el => { await Promise.allSettled(el.getAnimations().map(animation => animation.finished)); });
+  const edit = kitchen.getByRole('button', { name: 'Edit Trash bags' });
+  await expect(kitchen.getByRole('button', { name: /Restock|View task/ })).toHaveCount(0);
+  expect(await edit.evaluate(el => getComputedStyle(el).borderTopStyle)).toBe('solid');
+  expect((await edit.boundingBox()).height).toBeGreaterThanOrEqual(38);
+  expect((await edit.boundingBox()).width).toBeCloseTo((await kitchen.locator('.inventory-row-actions').first().boundingBox()).width, 1);
+  await nav.getByRole('button', { name: 'Profile', exact: true }).click();
+  const profileSkin = await page.locator('.profile-grid>.household-section').evaluate(el => ({ background: getComputedStyle(el).backgroundColor, border: getComputedStyle(el).borderColor, header: getComputedStyle(el.querySelector('.profile-section-toggle')).backgroundColor }));
+  expect(skin).toEqual(profileSkin);
+});

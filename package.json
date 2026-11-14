@@ -1,0 +1,28 @@
+{
+  "name": "nest-apartment-coordinator",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test src/model.test.js src/availability.test.js src/inventory.test.js src/household.test.js src/layout.test.js",
+    "test:e2e": "playwright test",
+    "optimize:art": "node scripts/optimize-pixel-art.mjs",
+    "test:backend": "node --test supabase/permissions.test.mjs",
+    "test:cloud-ui": "playwright test --config playwright.cloud.config.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
+    "pixelarticons": "^2.4.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.15",
+    "@playwright/test": "^1.64.1",
+    "sharp": "^0.35.5",
+    "vite": "^7.2.2"
+  }
+}

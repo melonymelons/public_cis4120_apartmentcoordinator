@@ -1,0 +1,310 @@
+/* Nest's visual system: warm pink canvas, botanical accents, soft spatial color. */
+:root {
+  --ink: #26362e;
+  --muted: #747e76;
+  --green: #32694f;
+  --orange: #df704c;
+  --line: #e8ece7;
+  --paper: #fff;
+  --accent-soft: #edf4ee;
+  --focus-ring: #6d9c83;
+  --ease-ui: cubic-bezier(.2,.8,.2,1);
+  --shadow-control: 0 1px 2px #183b2110, inset 0 1px 0 #ffffffc7;
+  --shadow-float: 0 16px 48px #19322314, 0 3px 10px #19322309;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: #d8e9dd; color: #254f3b; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button { transition: background .18s var(--ease-ui), color .18s var(--ease-ui), border-color .18s var(--ease-ui), box-shadow .18s var(--ease-ui); }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; }
+input:focus, select:focus, textarea:focus { outline: 2px solid #80ab8d; outline-offset: 2px; }
+button:disabled { opacity: .4; }
+
+/* Quiet navigation gives the map the strongest visual weight. */
+.app-header { background: #fff; border-bottom-color: #edf0ec; }
+.header-inner { max-width: 1440px; }
+.brand { color: #293b30; letter-spacing: -1.5px; font-weight: 500; transform: scale(.85); transform-origin: left center; }
+.brand-mark {
+  width: 26px;
+  height: 28px;
+  margin-right: 3px;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+  border-radius: 0;
+}
+.brand-mark img { display: block; width: 26px; height: 26px; translate: 0 2px; }
+
+.brand-period { color: #db7d55; }
+.desktop-nav { height: auto; gap: 5px; padding: 4px; border-radius: 13px; background: #f5f7f4; }
+.desktop-nav button { height: 34px; padding: 0 15px; color: #6c766e; font-size: 12px; border-radius: 9px; }
+.desktop-nav button::after { display: none; }
+.desktop-nav button.active { color: #28533c; background: #fff; box-shadow: 0 1px 4px #293d2810, 0 0 0 1px #263b2410; }
+.desktop-nav button:hover { color: #2c543e; }
+.profile-button { color: #5b685e; gap: 10px; border-radius: 30px; }
+.avatar, .tray-avatar { color: #4f5d4b; }
+.page-heading h1 { font-weight: 650; letter-spacing: -.8px; }
+.section-heading h2 { color: #3a493f; font-size: 15px; font-weight: 650; letter-spacing: -.25px; }
+.count-pill { background: #f0f4ed; border: 0; color: #617253; font-variant-numeric: tabular-nums; }
+
+/* Subtle lighting adds depth to the apartment without changing its geometry. */
+.map-page .card-heading h2 { font-size: 24px; letter-spacing: -.7px; color: #293d30; }
+.map-page .map-wrap {
+  background: radial-gradient(ellipse at 8% 5%, #f5e9d64f, transparent 55%), radial-gradient(ellipse at 96% 94%, #dcebe15c, transparent 55%), #f8faf7;
+  border-radius: 18px;
+}
+.map-room {
+  background: linear-gradient(145deg, color-mix(in srgb, var(--room-color) 67%, white), var(--room-color));
+  box-shadow: inset 0 1px 1px #fff9, 0 2px 5px #334b2310;
+}
+.map-page .map-room, .room-focus-map .map-room { border-radius: 12px; border-color: #fff; }
+.furniture { opacity: .9; filter: drop-shadow(0 2px 1px #44552e0b); }
+.map-page .room-label, .room-focus-map .room-label { color: #65715f; font-weight: 600; letter-spacing: -.15px; }
+.room-open-surface:hover { background: #ffffff1a; box-shadow: inset 0 0 0 2px #77956a4d; }
+.room-open-surface:focus-visible { outline-color: #628961; }
+.room-expand { color: #53674f; opacity: .5; transition: opacity .15s; }
+.room-open-surface:hover .room-expand { opacity: 1; }
+.object-pin, .task-drag-proxy {
+  background: linear-gradient(155deg, #fff, #fafcf7);
+  border-color: #ffffff;
+  box-shadow: 0 3px 6px #334b2320, 0 1px 2px #334b2308, inset 0 1px 0 #fff;
+  color: #607850;
+}
+.object-pin.open, .task-drag-proxy.open { background: linear-gradient(145deg, #fffcf7, #fff1df); border-color: #f0cda9; color: #d5753f; }
+.object-pin.pending { background: linear-gradient(145deg, #fffdf7, #f7ebd0); border-color: #e8d7aa; color: #96773c; }
+.object-pin.assigned { background: linear-gradient(145deg, #fff, #e6efdf); border-color: #c8d9bd; color: #61804e; }
+.object-pin:hover { box-shadow: 0 5px 14px #35472828, 0 0 0 2px #ffffffb3; }
+.pin-badge { background: #de8252; border-color: #fff; box-shadow: 0 1px 2px #b2643724; }
+.object-pin.assigned .pin-badge { background: #789d68; }
+.map-legend { color: #75816f; }
+.map-legend button { color: #47684b; font-weight: 550; }
+.room-stock-alert { background: linear-gradient(145deg, #fffefa, #fff2e3); color: #aa673d; border: 1px solid #ffffffc7; }
+
+/* Controls share a tactile highlight, a restrained shadow, and consistent focus. */
+.button { border-radius: 10px; font-weight: 600; }
+.button.primary { background: linear-gradient(160deg, #497e5e, #32694f 65%, #295b43); color: #fff; border: 1px solid #295d4380; box-shadow: inset 0 1px 0 #ffffff30, 0 2px 4px #254d3020; }
+.button.primary:hover { background: linear-gradient(160deg, #548b68, #397456 65%, #30654b); box-shadow: inset 0 1px 0 #ffffff38, 0 4px 10px #254d3025; }
+.button.subtle { background: linear-gradient(#fff, #f5f7f2); border: 1px solid #e1e6dc; color: #4c5e46; box-shadow: var(--shadow-control); }
+.button.subtle:hover { background: #f0f5eb; border-color: #c8d7bc; }
+.text-button { color: #50734e; }
+.text-button:hover { color: #284d35; }
+.text-button.danger { color: #b75d45; }
+.icon-button { background: #f3f5f0; color: #7e8876; border-radius: 50%; }
+.icon-button:hover { background: #e8eee3; color: #3c583d; }
+input, select, textarea { color: #374a3c; border-color: #e0e6dc; border-radius: 9px; background-color: #fff; transition: border-color .15s, box-shadow .15s; }
+input:hover, select:hover, textarea:hover { border-color: #c3d1bb; }
+.field-label { color: #53644d; font-weight: 550; }
+.filter-tabs, .availability-tabs { border-color: var(--line); }
+.filter-tabs button { color: #788370; }
+.filter-tabs button.selected { color: #315b3d; border-color: #5d8a61; }
+
+/* Vertical availability layers remain recognizable, with a clearer drop target. */
+.availability-tray { background: linear-gradient(145deg, #ffffffd9, #ffffff20), var(--tray-bg); border-color: color-mix(in srgb, var(--tray-rim) 65%, white); box-shadow: inset 0 1px 0 #fff; }
+.map-page .availability-tray { border-radius: 14px; padding: 11px; }
+.tray-name { color: #42533f; font-weight: 600; font-size: 12px; }
+.tray-confidence { color: #77866b; font-size: 12px; font-weight: 400; }
+.tray-slot { background: #ffffff75; border-color: color-mix(in srgb, var(--tray-rim) 80%, white); box-shadow: inset 0 1px 3px #2b4c1f05; border-radius: 10px; }
+.tray-person:hover .tray-avatar { box-shadow: 0 0 0 3px #fff, 0 0 0 4px var(--tray-rim); }
+.tray-task { background: linear-gradient(145deg, #fff, #fff8ec); box-shadow: 0 2px 4px #624c2310; }
+.tray-placeholder { color: #86977c; opacity: .5; }
+.availability-tray.drop-ready { box-shadow: 0 0 0 3px #9abf7e35, inset 0 1px 0 #fff; border-color: #83a96d; }
+.task-dragging .availability-tray { box-shadow: 0 4px 12px #3f512412; }
+.task-dragging .availability-tray.drop-ready { box-shadow: 0 0 0 3px #9abf7e40, 0 6px 18px #3f512418; }
+.task-card:hover { background: #f7faf4; }
+.task-copy strong { color: #34492f; font-size: 13px; font-weight: 550; }
+.task-copy>span { color: #7d8875; font-size: 12px; }
+.task-icon { background: linear-gradient(145deg, #fff7e8, #faebd5); color: #c38148; border-radius: 11px; }
+.task-icon.assigned { background: linear-gradient(145deg, #f2f6eb, #e6eedc); color: #6b8857; }
+
+/* Dialogs and item details use a white surface with fine edge lighting. */
+.modal { border-color: #fff; border-radius: 22px; background: #fff; box-shadow: 0 32px 100px #1a32242b, 0 5px 20px #1a322414, 0 0 0 1px #29402a12; }
+.modal::backdrop { background: #263d2f38; backdrop-filter: blur(8px); animation: backdrop-arrive .18s ease-out; }
+.modal-heading h2 { font-size: 27px; font-weight: 550; letter-spacing: -.65px; color: #2c402f; }
+.modal-heading p { color: #788571; }
+.object-detail-icon { background: radial-gradient(ellipse at 20% 0, #f8fcf1, #e8f0dc); box-shadow: inset 0 1px 0 #fff, 0 4px 12px #47612f0a; border: 1px solid #e9efdf; }
+.object-detail-icon.attention { background: radial-gradient(ellipse at 20% 0, #fffcf4, #f9e9cd); border-color: #f3e6cf; }
+.object-task-title { font-weight: 550; letter-spacing: -.6px; }
+.object-detail-copy { color: #78866f; }
+.supply-map-pin { background: linear-gradient(145deg, #fff, #f7fbf1); box-shadow: 0 3px 8px #3d5a2820, inset 0 1px 0 #fff; }
+.supply-map-pin.selected { outline-color: #84a470; }
+.supply-map-count { background: linear-gradient(145deg, #7da069, #557b43); font-variant-numeric: tabular-nums; }
+.supply-map-pin.needs-stock .supply-map-count { background: linear-gradient(145deg, #e5a16c, #c97b4c); }
+.room-task-label { background: #fffffff0; box-shadow: 0 1px 3px #4052310b; }
+.quantity-stepper button { background: linear-gradient(#fff, #f7faf3); border-color: #dce5d4; box-shadow: 0 1px 2px #3d512909; }
+.quantity-stepper output { font-variant-numeric: tabular-nums; color: #395131; }
+.quantity-value { display: inline-block; animation: quantity-change .16s var(--ease-ui); }
+.inventory-search { background: #fafcf8; border-color: #e2e8dc; }
+.inventory-item-name strong { color: #354b30; }
+.inventory-item-name>span { color: #7e8a74; }
+.inventory-item-icon { background: linear-gradient(145deg, #f4f8ed, #eaf1df); }
+.schedule-days button.selected { background: linear-gradient(145deg, #f4f8ef, #e6efdc); color: #456b3e; box-shadow: inset 0 1px 0 #fff, 0 1px 3px #3654250b; }
+.schedule-days button:hover { background-color: #f3f7ed; }
+.profile-setting:hover, .household-member-detail:hover { color: #416a3d; }
+.toast { background: linear-gradient(145deg, #3f6546, #304e36); box-shadow: var(--shadow-float); border: 1px solid #ffffff30; border-radius: 13px; }
+@keyframes backdrop-arrive { from { opacity: 0; } to { opacity: 1; } }
+@keyframes quantity-change { from { opacity: .4; translate: 0 3px; } to { opacity: 1; translate: 0 0; } }
+
+@media (min-width: 641px) and (max-width: 950px) {
+  .desktop-nav button { padding-inline: 9px; font-size: 12px; }
+  .header-inner { gap: 14px; }
+  .tray-name { font-size: 12px; }
+  .tray-confidence { font-size: 12px; }
+}
+@media (max-width: 640px) {
+  .header-inner { padding-inline: 20px; }
+  .map-page .card-heading h2 { font-size: 21px; letter-spacing: -.55px; }
+  .map-page .map-wrap { border-radius: 0; }
+  .map-page .map-room { border-radius: 10px; }
+  .map-page .availability-tray { padding: 10px 12px; }
+  .mobile-nav {
+    left: 12px; right: 12px; bottom: calc(10px + env(safe-area-inset-bottom));
+    padding: 10px 8px; border: 1px solid #e5eae1c9; border-radius: 22px;
+    background: #ffffffeb; backdrop-filter: blur(20px); box-shadow: 0 8px 32px #29422a12, 0 2px 6px #29422a08;
+  }
+  .mobile-nav button { color: #89957d; font-size: 12px; gap: 6px; }
+  .mobile-nav button.active { color: #36653e; font-weight: 600; }
+  .mobile-nav button.active>span::before { inset: -5px -13px; background: linear-gradient(135deg, #f2f7eb, #e2edda); border-radius: 10px; }
+  .mobile-nav button.active svg { stroke-width: 1.9; }
+  .modal { border-radius: 20px; }
+  .modal-heading h2 { font-size: 26px; }
+  .task-copy strong { font-size: 12px; }
+  .task-copy>span { font-size: 12px; }
+  .task-dragging .map-page .availability-trays { background: #ffffffed; backdrop-filter: blur(16px); box-shadow: 0 -5px 30px #29422a10, 0 0 0 1px #e3e9dd; }
+}
+@media (hover: hover) {
+  .button:not(:disabled):hover { translate: 0 -1px; }
+  .button:not(:disabled):active { translate: 0 0; }
+  .supply-map-pin:hover { box-shadow: 0 5px 12px #365b2926; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quantity-value, .modal::backdrop { animation: none; }
+  .button:not(:disabled):hover { translate: none; }
+}
+
+/* Secondary information stays readable at the app's compact text sizes. */
+.profile-setting>span, .household-name, .household-member-detail>span:last-child>span,
+.profile-summary p, .inventory-item-name>span, .inventory-buyer,
+.room-inspector-heading small, .room-map-key, .stock-summary,
+.availability-source-detail, .routine-time-zone { color: #687562; }
+.tray-confidence { color: #6d7d63; }
+.mobile-nav button { color: #6d7a65; }
+.mobile-nav button.active { color: #36653e; }
+
+/* The viewport clips a camera layer while retaining the original fitted map size. */
+.map-page .map-viewport{position:relative;overflow:hidden;touch-action:pan-y;isolation:isolate}
+.map-page .map-wrap>.map-camera{width:min(100%,calc((100svh - 245px) * var(--grid-cols,12) / var(--grid-rows,14)));max-width:800px;margin:auto;transform-origin:center;will-change:transform}
+.map-page .map-camera>.map-canvas{width:100%;max-width:none;margin:0}
+.map-viewport.is-zoomed{touch-action:none;cursor:grab}
+.map-viewport.is-panning,.map-viewport.is-panning .room-open-surface{cursor:grabbing}
+.map-viewport.is-zoomed .room-open-surface{cursor:grab}
+.map-zoom-controls{position:absolute;right:12px;bottom:12px;z-index:5;display:flex;align-items:center;gap:2px;padding:4px;background:#ffffffed;border:1px solid #dfe6d8;border-radius:12px;box-shadow:0 3px 12px #34502612;backdrop-filter:blur(12px);color:#546e49}
+.map-zoom-controls button{display:grid;place-items:center;width:32px;height:32px;padding:0;border-radius:8px}
+.map-zoom-controls button:hover{background:#edf3e6}.map-zoom-controls output{min-width:42px;text-align:center;font-size:12px;font-weight:550;font-variant-numeric:tabular-nums}
+.map-zoom-controls .skip-map-tour{width:auto;padding:0 9px;font-size:12px}.zoom-divider{width:1px;height:16px;background:#e2e8dc;margin:0 3px}
+@media(max-width:640px){.map-page .map-wrap>.map-camera{width:100%;max-width:560px}.map-zoom-controls{right:10px;bottom:10px;padding:3px}.map-zoom-controls button{width:29px;height:29px}.map-zoom-controls output{min-width:38px}}
+@media(prefers-reduced-motion:reduce){.map-camera{will-change:auto}}
+/* Reserve a small control rail so zoom buttons never cover room names. */
+.map-page .map-viewport{padding-bottom:58px}
+@media(max-width:640px){.map-page .map-viewport{padding-bottom:52px}}
+
+/* The home page is a spatial workspace; coordination lives in a contextual dock. */
+.app-main.map-page{position:relative;width:100%;max-width:none;height:calc(100dvh - 88px);padding:0;margin:0;min-height:260px}
+.map-page .home-grid{display:block;width:100%;height:100%}
+.map-page .apartment-card{position:relative;width:100%;height:100%;animation:none}
+.map-page .card-heading{position:absolute;left:28px;right:28px;top:18px;z-index:6;margin:0;pointer-events:none;min-height:36px}
+.map-page .card-heading>div,.map-page .card-heading>button{pointer-events:auto}
+.map-page .card-heading>button{margin-left:auto}
+.map-page .card-heading h2{font-size:22px;text-shadow:0 1px 8px #fff}
+.map-page .card-heading h2{max-width:65vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.map-page .map-viewport{height:100%;min-height:0;margin:0;border-radius:0;padding:68px 24px 70px;background:radial-gradient(ellipse at 18% 15%,#f4ecd64d,transparent 55%),radial-gradient(ellipse at 88% 90%,#dcebe15c,transparent 60%),#f9fbf7}
+.map-page .map-wrap>.map-camera{width:min(100%,calc((100dvh - 226px) * var(--grid-cols,12) / var(--grid-rows,14)));max-width:none;flex-shrink:0}
+.map-page .map-legend{position:absolute;left:28px;bottom:21px;z-index:6;margin:0;padding:0;gap:15px;pointer-events:none}
+.map-page .map-legend>*{pointer-events:auto}
+.map-page .map-legend>button{margin-left:8px;border-radius:10px;padding:9px 12px;background:#ffffffdc;border:1px solid #e2e9db;box-shadow:0 2px 6px #344d2109}
+.map-page .map-zoom-controls{bottom:19px;right:28px}
+.map-page>.incoming-banner{position:absolute;top:65px;left:28px;z-index:10;margin:0;max-width:calc(100% - 56px);box-shadow:0 3px 12px #45602d0b}
+.map-page>.notice{position:absolute;left:24px;right:24px;top:68px;z-index:12}
+
+.availability-dock{position:absolute;z-index:20;border:1px solid #e0e7d9;border-radius:20px;background:#fffffff0;box-shadow:0 8px 28px #34502512,0 1px 3px #34502508;backdrop-filter:blur(18px);padding:10px}
+.dock-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-shrink:0}
+.dock-heading h2{font-size:14px;font-weight:600;color:#44583b}
+.dock-toggle{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;color:#718365;flex-shrink:0}
+.dock-toggle:hover{background:#f0f5e9}
+.availability-dock.collapsed{right:24px;top:50%;translate:0 -50%;padding:9px}
+.availability-dock.collapsed .dock-heading h2{display:none}
+.availability-dock.collapsed .dock-heading{justify-content:center;margin-bottom:8px}
+.map-page .availability-dock .availability-trays{position:static;display:flex;gap:8px;left:auto;right:auto;bottom:auto;max-height:none;margin:0;padding:0;background:transparent;box-shadow:none;border-radius:0;overflow:visible;transform:none}
+.availability-dock.collapsed .availability-trays{flex-direction:column}
+.map-page .availability-dock.collapsed .availability-tray{display:block;position:relative;flex-shrink:0;padding:6px;border:0;border-radius:50%;background:transparent;box-shadow:none;width:46px;min-height:46px}
+.availability-dock.collapsed .tray-person{padding:0;gap:0}
+.availability-dock.collapsed .tray-name{display:none}
+.availability-dock.collapsed .tray-avatar{width:34px;height:34px;font-size:22px}
+.availability-dock.collapsed .tray-slot{display:none}
+.availability-dock.collapsed .tray-slot:has(.tray-task){display:flex;position:absolute;left:-2px;bottom:-2px;gap:2px;min-height:0;border:0;background:transparent;padding:0;max-width:48px;flex-wrap:wrap;box-shadow:none}
+.availability-dock.collapsed .tray-task{width:20px;height:20px;border-radius:6px;margin:0}
+.availability-dock.collapsed .tray-task>svg{width:12px;height:12px}.availability-dock.collapsed .tray-task-status{width:9px;height:9px;right:-3px;bottom:-3px}
+.availability-dock.expanded{right:24px;top:50%;translate:0 -50%;width:310px;max-height:calc(100% - 140px);display:flex;flex-direction:column;padding:14px}
+.availability-dock.expanded .dock-heading{padding:0 0 10px}
+.availability-dock.expanded .dock-trays{overflow:auto;min-height:0;overscroll-behavior:contain;scrollbar-width:thin}
+.map-page .availability-dock.expanded .availability-trays{flex-direction:column;gap:8px;padding:3px}
+.map-page .availability-dock.expanded .availability-tray{grid-template-columns:minmax(0,1fr) minmax(90px,1fr);padding:10px;gap:10px;transform:none}
+.availability-dock.expanded .tray-person{gap:10px}
+.availability-dock.expanded .tray-name{font-size:12px}
+.availability-dock.expanded .tray-slot{min-height:42px}
+.task-dragging .availability-dock{border-color:#b7cba6;box-shadow:0 10px 35px #34502520}
+@media(max-width:640px){
+ .app-main.map-page{height:calc(100dvh - 70px);min-height:260px;padding:0}
+ .map-page .card-heading{left:16px;right:16px;top:14px;min-height:34px;gap:10px;margin:0}
+ .map-page .card-heading h2{font-size:19px;max-width:calc(100vw - 126px)}
+ .map-page .map-viewport{margin:0;padding:58px 10px 208px;height:100%;min-height:0}
+ .map-page .map-wrap>.map-camera{width:min(100%,calc((100dvh - 336px) * var(--grid-cols,12) / var(--grid-rows,14)));max-width:none}
+ .map-page .map-legend{left:12px;bottom:100px;padding:0;gap:0}
+ .map-page .map-legend>span{display:none}
+ .map-page .map-legend>button{margin:0;padding:9px 10px;font-size:12px;background:#ffffffed}
+ .map-page .map-zoom-controls{right:12px;bottom:100px}
+ .availability-dock.collapsed{right:auto;left:50%;top:auto;bottom:148px;translate:-50% 0;padding:7px 9px;display:flex;align-items:center;gap:8px;max-width:calc(100% - 24px);border-radius:18px}
+ .availability-dock.collapsed .dock-heading{margin:0;padding-right:7px;border-right:1px solid #e6ecdf}
+ .availability-dock.collapsed .dock-trays{min-width:0;overflow:auto;scrollbar-width:none;padding:2px}
+ .map-page .availability-dock.collapsed .availability-trays{flex-direction:row;gap:7px}
+ .map-page .availability-dock.collapsed .availability-tray{width:40px;min-height:40px;padding:4px}
+ .availability-dock.collapsed .tray-avatar{width:32px;height:32px;font-size:21px}
+ .availability-dock.expanded{left:12px;right:12px;top:auto;bottom:96px;translate:none;width:auto;max-height:min(380px,55dvh);border-radius:20px}
+ .map-page .availability-dock.expanded .availability-tray{grid-template-columns:minmax(0,1fr) minmax(100px,1.2fr)}
+ .map-page>.incoming-banner{top:57px;left:12px;max-width:calc(100% - 24px);font-size:12px}
+ .map-page>.notice{left:12px;right:12px;top:56px}
+}
+@media(min-width:641px) and (max-height:500px){
+ .app-main.map-page{min-height:200px}
+ .map-page .map-viewport{padding-top:50px;padding-bottom:54px}
+ .map-page .map-wrap>.map-camera{width:min(100%,calc((100dvh - 192px) * var(--grid-cols,12) / var(--grid-rows,14)))}
+ .map-page .card-heading{top:8px}.map-page .card-heading h2{font-size:18px}
+ .map-page .map-zoom-controls{bottom:9px}.map-page .map-legend{bottom:10px}
+ .availability-dock.expanded{max-height:calc(100% - 24px);width:285px}
+ .availability-dock.collapsed{top:46%}
+ .map-page .availability-dock .availability-trays{gap:3px}
+}
+.availability-dock.collapsed{display:flex;flex-direction:column;max-height:calc(100% - 140px)}
+.availability-dock.collapsed .dock-trays{min-height:0;overflow:auto;scrollbar-width:none}
+@media(max-width:640px){.availability-dock.collapsed{flex-direction:row;max-height:none}}
+
+/* One continuous warm pink backdrop across the header and workspace. */
+:root{background:#f7efec}
+body{min-height:100dvh;background:radial-gradient(ellipse at 10% 0%,#fffaf56b,transparent 65%),linear-gradient(150deg,#f7efec 0%,#efe3e3 52%,#e5d4d9 100%);background-attachment:fixed}
+.app-header{background:transparent;border-bottom:0}
+.map-page .map-viewport{background:transparent}
+
+/* A movable world surface, with a grid that follows pan and zoom. */
+.map-page .map-viewport,.map-viewport.is-zoomed{touch-action:none;cursor:grab;overscroll-behavior:none}
+.map-viewport .room-open-surface{cursor:grab}
+.map-viewport.is-panning,.map-viewport.is-panning .room-open-surface{cursor:grabbing}
+.map-viewport:focus-visible{outline:2px solid #ae8f9c;outline-offset:-3px}
+.canvas-grid{position:absolute;left:calc(var(--grid-left) - 50% / var(--grid-cols));top:calc(var(--grid-top) - 50% / var(--grid-rows));width:var(--grid-width);height:var(--grid-height);z-index:0;pointer-events:none;background-image:radial-gradient(circle,#91758173 1.1px,transparent 1.35px);background-size:calc(100% / var(--grid-tiles-x)) calc(100% / var(--grid-tiles-y));background-position:0 0}
+.map-camera>.map-canvas{z-index:1}
+.map-page .map-camera{position:relative;z-index:1}
+.canvas-gesture-hint{position:absolute;top:28px;left:28px;z-index:3;display:flex;align-items:center;gap:7px;color:#8a6b78;font-size:12px;pointer-events:none;transition:opacity .25s ease}
+.canvas-gesture-hint.is-hidden{opacity:0}
+@media(max-width:640px){.canvas-gesture-hint{left:16px;top:25px;font-size:12px;gap:5px}}
+@media(min-width:641px) and (max-height:500px){.canvas-gesture-hint{top:20px}}
+@media(prefers-reduced-motion:reduce){.canvas-gesture-hint{transition:none}}

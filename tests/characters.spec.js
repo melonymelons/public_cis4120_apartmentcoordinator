@@ -1,0 +1,67 @@
+import { test, expect } from './fixtures';
+import { initialState } from '../src/model.js';
+
+const tab = (page, name) => page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('button', { name, exact: true });
+
+test('choose and save a character, then show it on assigned task markers while inventory stays informational', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  await tab(page, 'Profile').click();
+  const profile = page.getByRole('form', { name: 'Your profile', exact: true });
+  const dialog = page.getByRole('dialog');
+  await profile.getByRole('button', { name: 'Pink hoodie', exact: true }).click();
+  await expect(profile.locator('.profile-summary [data-character="peach"]')).toBeVisible();
+  await profile.screenshot({ path: 'test-results/character-picker.png', animations: 'disabled' });
+  await profile.getByRole('button', { name: 'Save profile' }).click();
+  await expect(page.locator('.profile-summary [data-character="peach"]')).toBeVisible();
+  await profile.getByRole('button', { name: 'Blue overalls', exact: true }).click();
+  await profile.getByRole('button', { name: 'Reset', exact: true }).click();
+  await expect(page.locator('.profile-summary [data-character="peach"]')).toBeVisible();
+  await tab(page, 'Apartment').click();
+  const trash = page.locator('.object-pin[data-object="trash1"]');
+  await expect(trash.locator('.responsibility-character')).toHaveCount(0);
+  await trash.click();
+  await page.getByRole('button', { name: 'I’ll take this' }).click();
+  await page.getByRole('button', { name: 'Close dialog' }).click();
+  await expect(trash.locator('[data-owner="jess"] [data-character="peach"]')).toBeVisible();
+  await expect(trash).toHaveAccessibleName(/in charge: Jessalyn/);
+  await tab(page, 'Inventory').click();
+  await page.getByRole('article', { name: 'Toilet paper', exact: true }).getByRole('button', { name: 'I’ll buy it' }).click();
+  await tab(page, 'Apartment').click();
+  const supplies = page.locator('.object-pin[data-object="supplies1"]');
+  await expect(supplies.locator('[data-character="peach"]')).toHaveCount(0);
+  await page.reload();
+  await expect(trash.locator('[data-character="peach"]')).toBeVisible();
+  await expect(supplies.locator('[data-character="peach"]')).toHaveCount(0);
+  await page.screenshot({ path: 'test-results/assigned-characters-mobile.png', animations: 'disabled' });
+  await page.getByRole('button', { name: 'Open Bathroom', exact: true }).click({ position: { x: 25, y: 25 } });
+  await expect(dialog.locator('.supply-map-pin .responsibility-character')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Close dialog' }).click();
+  await tab(page, 'Inventory').click();
+  await page.getByRole('button', { name: 'Edit Toilet paper', exact: true }).click();
+  await page.getByRole('dialog').getByLabel('Quantity (optional)').fill('5');
+  await page.getByRole('dialog').getByRole('button', { name: 'Save item' }).click();
+  await tab(page, 'Apartment').click();
+  await expect(supplies.locator('.responsibility-character')).toHaveCount(0);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.screenshot({ path: 'test-results/assigned-characters-desktop.png', animations: 'disabled' });
+  await trash.click();
+  await page.getByRole('button', { name: 'Mark complete' }).click();
+  await expect(trash.locator('.responsibility-character')).toHaveCount(0);
+});
+
+test('pending suggestions and inventory have no owner marker; accepted tasks do', async ({ page }) => {
+  const seed = initialState();
+  seed.people[0].character = 'peach';
+  seed.people[1].character = 'sage';
+  seed.people[2].character = 'sky';
+  seed.tasks[0] = { ...seed.tasks[0], status: 'pending', to: 'maya' };
+  seed.tasks[1] = { ...seed.tasks[1], status: 'assigned', to: 'maya' };
+  seed.tasks.push({ id: 'extra', objectId: 'supplies1', title: 'Clean shelf', status: 'assigned', to: 'alex' });
+  seed.inventory[1] = { ...seed.inventory[1], objectId: null, buyerId: 'jess' };
+  await page.addInitScript(state => localStorage.setItem('roomie-v1', JSON.stringify(state)), seed);
+  await page.goto('/');
+  await expect(page.locator('[data-object="trash1"] .responsibility-character')).toHaveCount(0);
+  await expect(page.locator('[data-object="supplies1"] .responsibility-character')).toHaveCount(2);
+  await expect(page.locator('.supply-map-pin .responsibility-character')).toHaveCount(0);
+});

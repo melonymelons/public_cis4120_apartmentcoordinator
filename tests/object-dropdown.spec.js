@@ -1,0 +1,34 @@
+import { test, expect } from './fixtures';
+import { enterEdit } from './layout-helpers';
+
+test('custom object menus support touch choices, keyboard selection and Escape without closing the dialog', async ({ page }) => {
+  await page.goto('/');
+  await enterEdit(page);
+  await page.getByRole('button', { name: 'Add task', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  const room = dialog.getByRole('combobox', { name: 'Room', exact: true });
+  await room.click();
+  await dialog.getByRole('option', { name: 'Bathroom', exact: true }).click();
+  await expect(room).toHaveText('Bathroom');
+  await expect(room).toBeFocused();
+  await expect(dialog.getByRole('combobox', { name: 'Position in room' })).toHaveCount(0);
+  await room.press('Enter');
+  await room.press('Home');
+  await room.press('Enter');
+  await expect(room).toHaveText('Kitchen');
+  await room.click();
+  await dialog.getByRole('option', { name: 'Bathroom', exact: true }).click();
+  await room.click();
+  await room.press('Escape');
+  await expect(dialog).toBeVisible();
+  await expect(room).toHaveAttribute('aria-expanded', 'false');
+  await room.click();
+  await dialog.getByLabel('Task name').click();
+  await expect(room).toHaveAttribute('aria-expanded', 'false');
+  await dialog.getByLabel('Task name').fill('Soap dispenser');
+  await dialog.getByRole('button', { name: 'Add to apartment' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+  await page.getByRole('button', { name: 'Done', exact: true }).click();
+  const added = await page.evaluate(() => JSON.parse(localStorage.getItem('roomie-v1')).objects.find(o => o.name === 'Soap dispenser'));
+  expect(added).toMatchObject({ roomId: 'bathroom' });
+});
